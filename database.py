@@ -9,3 +9,4 @@ tasks_collection = db.tasks
 users_collection = db.users
 notifications_collection = db.notifications
 backups_collection = db.backups
+logs_collection = db.logs  
