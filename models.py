@@ -30,6 +30,7 @@ class TaskModel(BaseModel):
     title: str
     description: str
     status: TaskStatus = TaskStatus.pending
+    user_id: PyObjectId  # Dodano polje za povezivanje korisnika
 
     class Config:
         allow_population_by_field_name = True
@@ -38,7 +39,8 @@ class TaskModel(BaseModel):
             "example": {
                 "title": "Finish FastAPI project",
                 "description": "Complete CRUD operations",
-                "status": "pending"
+                "status": "pending",
+                "user_id": "60d9f1f1f4e9c9e1f8e8e8e8"  # Primjer user_id
             }
         }
 
@@ -47,17 +49,19 @@ class UpdateTaskModel(BaseModel):
     title: Optional[str]
     description: Optional[str]
     status: Optional[TaskStatus]
+    user_id: Optional[PyObjectId]  # Mogućnost ažuriranja korisnika koji je povezan s zadatkom
 
     class Config:
         schema_extra = {
             "example": {
                 "title": "Update the FastAPI project",
                 "description": "Fix bugs in CRUD operations",
-                "status": "completed"
+                "status": "completed",
+                "user_id": "60d9f1f1f4e9c9e1f8e8e8e8"  # Primjer user_id
             }
         }
 
-# Ako imaš druge modele, npr. korisnika:
+# Model za korisnike
 class UserModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     username: str

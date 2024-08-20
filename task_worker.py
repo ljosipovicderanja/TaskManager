@@ -10,11 +10,13 @@ class Task(BaseModel):
     title: str
     description: str
     status: str = "pending"
+    user_id: str  # Dodano polje za povezivanje korisnika
 
 class UpdateTaskModel(BaseModel):
     title: Optional[str]
     description: Optional[str]
     status: Optional[str]
+    user_id: Optional[str]  # Dodano polje za ažuriranje korisnika
 
 @app.post("/tasks/", response_model=dict)
 async def create_task(task: Task):
@@ -33,6 +35,11 @@ async def get_task(task_id: str):
     if task is None:
         raise HTTPException(status_code=404, detail="Task not found")
     return task
+
+@app.get("/tasks/user/{user_id}", response_model=List[Task])
+async def get_tasks_by_user(user_id: str):
+    tasks = await tasks_collection.find({"user_id": user_id}).to_list(100)
+    return tasks
 
 @app.put("/tasks/{task_id}", response_model=Task)
 async def update_task(task_id: str, task: UpdateTaskModel):
