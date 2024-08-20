@@ -6,10 +6,12 @@ from database import users_collection
 
 app = FastAPI()
 
+# Osnovni model za korisnika
 class User(BaseModel):
     username: str
     email: str
 
+# Kreiranje novog korisnika
 @app.post("/users/", response_model=dict)
 async def create_user(user: User):
     existing_user = await users_collection.find_one({"email": user.email})
@@ -19,11 +21,13 @@ async def create_user(user: User):
     result = await users_collection.insert_one(user_dict)
     return {"id": str(result.inserted_id)}
 
+# Dohvaćanje svih korisnika
 @app.get("/users/", response_model=List[User])
 async def get_users():
     users = await users_collection.find().to_list(100)
     return users
 
+# Dohvaćanje korisnika prema ID-u
 @app.get("/users/{user_id}", response_model=User)
 async def get_user(user_id: str):
     user = await users_collection.find_one({"_id": ObjectId(user_id)})
@@ -31,6 +35,7 @@ async def get_user(user_id: str):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+# Ažuriranje korisnika prema ID-u
 @app.put("/users/{user_id}", response_model=User)
 async def update_user(user_id: str, user: User):
     update_data = user.dict()
@@ -39,6 +44,7 @@ async def update_user(user_id: str, user: User):
         raise HTTPException(status_code=404, detail="User not found or no change detected")
     return await get_user(user_id)
 
+# Brisanje korisnika prema ID-u
 @app.delete("/users/{user_id}", response_model=dict)
 async def delete_user(user_id: str):
     result = await users_collection.delete_one({"_id": ObjectId(user_id)})
@@ -46,10 +52,17 @@ async def delete_user(user_id: str):
         raise HTTPException(status_code=404, detail="User not found")
     return {"message": "User deleted successfully"}
 
+# Health check ruta
 @app.get("/health")
 async def health_check():
     return {"status": "OK"}
 
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the User Service API!"}
+
+
+# Pokretanje aplikacije
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8002)
