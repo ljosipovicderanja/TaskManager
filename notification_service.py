@@ -7,10 +7,6 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 app = FastAPI()
 
-MONGO_URI = "mongodb+srv://lartemuseums:ca7oPe2VJ1RphE5d@cluster0.ft15t.mongodb.net/"
-client = AsyncIOMotorClient(MONGO_URI)
-db = client.get_database("notification_database")
-
 class Notification(BaseModel):
     user_id: str
     message: str
