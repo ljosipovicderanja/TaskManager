@@ -1,82 +1,52 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List, Optional
-from bson import ObjectId
-from database import db
-from motor.motor_asyncio import AsyncIOMotorClient
+import httpx
+import asyncio
 
 app = FastAPI()
 
-# Model za zadatke
-class Task(BaseModel):
-    title: str
-    description: str
-    completed: bool = False
+services = {
+    "task_service": "http://localhost:8001",
+    "user_service": "http://localhost:8002",
+    "notification_service": "http://localhost:8003",
+    "backup_service": "http://localhost:8004"
+}
 
-    class Config:
-        schema_extra = {
-            "example": {
-                "title": "Finish FastAPI project",
-                "description": "Complete CRUD operations",
-                "completed": False
-            }
-        }
+class ServiceStatus(BaseModel):
+    status: str
 
-class UpdateTaskModel(BaseModel):
-    title: Optional[str]
-    description: Optional[str]
-    completed: Optional[bool]
+async def check_service_health(client, service_name, url):
+    try:
+        response = await client.get(f"{url}/health")
+        if response.status_code == 200:
+            return {service_name: "UP"}
+        else:
+            return {service_name: "DOWN"}
+    except:
+        return {service_name: "DOWN"}
 
-    class Config:
-        schema_extra = {
-            "example": {
-                "title": "Update the FastAPI project",
-                "description": "Fix bugs in CRUD operations",
-                "completed": True
-            }
-        }
-
-# CRUD operacije za zadatke
-@app.post("/tasks/", response_model=dict)
-async def create_task(task: Task):
-    task_dict = task.dict()
-    result = await db.tasks.insert_one(task_dict)
-    return {"id": str(result.inserted_id)}
-
-@app.get("/tasks/", response_model=List[Task])
-async def get_tasks():
-    tasks = await db.tasks.find().to_list(100)
-    return tasks
-
-@app.get("/tasks/{task_id}", response_model=Task)
-async def get_task(task_id: str):
-    task = await db.tasks.find_one({"_id": ObjectId(task_id)})
-    if task is None:
-        raise HTTPException(status_code=404, detail="Task not found")
-    return task
-
-@app.put("/tasks/{task_id}", response_model=Task)
-async def update_task(task_id: str, task: UpdateTaskModel):
-    update_data = {k: v for k, v in task.dict().items() if v is not None}
-    result = await db.tasks.update_one({"_id": ObjectId(task_id)}, {"$set": update_data})
-    if result.modified_count == 0:
-        raise HTTPException(status_code=404, detail="Task not found")
-    return await get_task(task_id)
-
-@app.delete("/tasks/{task_id}", response_model=dict)
-async def delete_task(task_id: str):
-    result = await db.tasks.delete_one({"_id": ObjectId(task_id)})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Task not found")
-    return {"message": "Task deleted successfully"}
-
-@app.get("/health/")
-async def health_check():
-    return {"status": "OK"}
+@app.get("/services/health")
+async def check_services_health():
+    async with httpx.AsyncClient() as client:
+        tasks = [check_service_health(client, name, url) for name, url in services.items()]
+        results = await asyncio.gather(*tasks)
+    return {k: v for result in results for k, v in result.items()}
 
 @app.get("/")
-def read_root():
-    return {"message": "Hello, World"}
+async def read_root():
+    return {"message": "Welcome to Task Management System"}
+
+@app.get("/tasks")
+async def get_tasks():
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{services['task_service']}/tasks")
+        return response.json()
+
+@app.get("/users")
+async def get_users():
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{services['user_service']}/users")
+        return response.json()
 
 if __name__ == "__main__":
     import uvicorn

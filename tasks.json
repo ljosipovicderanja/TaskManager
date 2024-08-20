@@ -1,0 +1,380 @@
+
+[
+      {
+        "title": "Implementirati funkcionalnost prijave korisnika u web aplikaciji",
+        "description": "Razviti sustav za prijavu korisnika, uključujući validaciju unosa i autentifikaciju.",
+        "status": "completed"
+      },
+      {
+        "title": "Napisati testove za CRUD operacije u API-ju",
+        "description": "Stvoriti testove za provjeru ispravnosti operacija kreiranja, čitanja, ažuriranja i brisanja podataka u API-ju.",
+        "status": "pending"
+      },
+      {
+        "title": "Izraditi dizajn baze podataka za e-trgovinu",
+        "description": "Osmišljavanje sheme baze podataka koja će podržati sve funkcionalnosti e-trgovine, uključujući proizvode, korisnike i narudžbe.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti korisničko sučelje za upravljanje zadacima",
+        "description": "Izraditi sučelje koje omogućava korisnicima dodavanje, pregledavanje, ažuriranje i brisanje zadataka.",
+        "status": "completed"
+      },
+      {
+        "title": "Integrirati plaćanje karticom u aplikaciju za e-trgovinu",
+        "description": "Dodati funkcionalnost za plaćanje kreditnim karticama u aplikaciju za e-trgovinu, uključujući sigurnosne aspekte.",
+        "status": "pending"
+      },
+      {
+        "title": "Uspostaviti CI/CD pipeline za automatsko testiranje i deploy",
+        "description": "Postaviti automatizirani sustav za kontinuirano integriranje i isporučivanje aplikacije s testiranjem i deployom.",
+        "status": "pending"
+      },
+      {
+        "title": "Dodati mogućnost filtriranja rezultata pretraživanja u aplikaciji",
+        "description": "Implementirati funkcionalnost koja omogućava korisnicima filtriranje rezultata pretraživanja prema različitim kriterijima.",
+        "status": "completed"
+      },
+      {
+        "title": "Prilagoditi postojeći API za rad s mobilnim aplikacijama",
+        "description": "Prilagoditi API kako bi bio kompatibilan s mobilnim aplikacijama, uključujući optimizaciju performansi.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti sustav za obavijesti u stvarnom vremenu",
+        "description": "Stvoriti sustav koji šalje obavijesti korisnicima u stvarnom vremenu na temelju određenih događaja ili akcija.",
+        "status": "pending"
+      },
+      {
+        "title": "Napisati dokumentaciju za API",
+        "description": "Izraditi detaljnu dokumentaciju za API koja uključuje opis svih endpointa, parametara i primjera odgovora.",
+        "status": "completed"
+      },
+      {
+        "title": "Poboljšati performanse baze podataka",
+        "description": "Optimizirati upite i indeksiranje u bazi podataka kako bi se poboljšala brzina i učinkovitost.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti funkcionalnost za izvještavanje o greškama u aplikaciji",
+        "description": "Implementirati sustav za prikupljanje i analiziranje grešaka i iznimki u aplikaciji.",
+        "status": "completed"
+      },
+      {
+        "title": "Dodati podršku za više jezika u aplikaciju",
+        "description": "Omogućiti korisnicima da odaberu jezik u aplikaciji i pružiti prijevode za sve tekstove.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti mobilnu verziju aplikacije",
+        "description": "Izraditi verziju aplikacije koja je optimizirana za mobilne uređaje, uključujući prilagodbu korisničkog sučelja.",
+        "status": "completed"
+      },
+      {
+        "title": "Implementirati mogućnost izvoza podataka u CSV format",
+        "description": "Dodati funkcionalnost koja omogućava korisnicima izvođenje podataka iz aplikacije u CSV datoteku.",
+        "status": "pending"
+      },
+      {
+        "title": "Postaviti sustav za automatsko nadgledanje aplikacije",
+        "description": "Implementirati alat za praćenje performansi aplikacije i obavještavanje o potencijalnim problemima.",
+        "status": "completed"
+      },
+      {
+        "title": "Uključiti analitiku korisničkog ponašanja u aplikaciju",
+        "description": "Integrirati sustav analitike za praćenje i analizu ponašanja korisnika u aplikaciji.",
+        "status": "pending"
+      },
+      {
+        "title": "Implementirati naprednu pretragu s predlozima",
+        "description": "Razviti pretraživač koji nudi prijedloge dok korisnici upisuju upit.",
+        "status": "completed"
+      },
+      {
+        "title": "Dodati mogućnost komentiranja i recenziranja proizvoda",
+        "description": "Omogućiti korisnicima da ostavljaju komentare i recenzije proizvoda u aplikaciji za e-trgovinu.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti sustav za upravljanje korisničkim pravima",
+        "description": "Implementirati sustav za dodjeljivanje i upravljanje pravima korisnika unutar aplikacije.",
+        "status": "completed"
+      },
+      {
+        "title": "Postaviti sustav za backup podataka",
+        "description": "Implementirati automatizirani sustav za redovito pravljenje sigurnosnih kopija podataka.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti funkcionalnost za grupiranje zadataka",
+        "description": "Omogućiti korisnicima da grupiraju zadatke u kategorije ili projekte za lakše upravljanje.",
+        "status": "completed"
+      },
+      {
+        "title": "Implementirati mogućnost prijenosa datoteka",
+        "description": "Dodati funkcionalnost koja omogućava korisnicima prijenos datoteka unutar aplikacije.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti mogućnost praćenja napretka zadataka",
+        "description": "Stvoriti sustav koji omogućava korisnicima praćenje napretka zadataka kroz različite faze.",
+        "status": "completed"
+      },
+      {
+        "title": "Dodati podršku za autentifikaciju preko društvenih mreža",
+        "description": "Omogućiti korisnicima prijavu putem društvenih mreža kao što su Facebook i Google.",
+        "status": "pending"
+      },
+      {
+        "title": "Izraditi sustav za obavijesti o važnim događajima",
+        "description": "Implementirati obavijesti za važne događaje unutar aplikacije, uključujući push obavijesti.",
+        "status": "completed"
+      },
+      {
+        "title": "Poboljšati sigurnost aplikacije",
+        "description": "Provoditi sigurnosne mjere i revizije kako bi se zaštitila aplikacija od prijetnji i napada.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti funkcionalnost za praćenje vremenskih zona",
+        "description": "Implementirati sustav koji omogućava korisnicima praćenje i konvertiranje vremenskih zona.",
+        "status": "completed"
+      },
+      {
+        "title": "Dodati opciju za automatsko ažuriranje aplikacije",
+        "description": "Omogućiti automatska ažuriranja aplikacije kako bi korisnici uvijek imali najnoviju verziju.",
+        "status": "pending"
+      },
+      {
+        "title": "Izraditi sučelje za praćenje i upravljanje pretplatama",
+        "description": "Stvoriti sučelje koje omogućava korisnicima praćenje i upravljanje svojim pretplatama.",
+        "status": "completed"
+      },
+      {
+        "title": "Razviti funkcionalnost za generiranje izvještaja",
+        "description": "Implementirati sustav koji omogućava generiranje izvještaja iz podataka u aplikaciji.",
+        "status": "pending"
+      },
+      {
+        "title": "Integrirati aplikaciju s vanjskim API-jem",
+        "description": "Povezati aplikaciju s vanjskim API-jem za dodatne podatke ili funkcionalnosti.",
+        "status": "completed"
+      },
+      {
+        "title": "Razviti mogućnost kreiranja i uređivanja profila korisnika",
+        "description": "Implementirati funkcionalnost koja omogućava korisnicima kreiranje i uređivanje svojih profila.",
+        "status": "pending"
+      },
+      {
+        "title": "Dodati mogućnost dijeljenja sadržaja na društvenim mrežama",
+        "description": "Omogućiti korisnicima dijeljenje sadržaja s aplikacije na društvenim mrežama.",
+        "status": "completed"
+      },
+      {
+        "title": "Poboljšati korisničko iskustvo navigacije",
+        "description": "Razviti poboljšanja u navigaciji aplikacije kako bi korisnici lakše pronašli željene funkcionalnosti.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti integraciju s vanjskim sustavom za upravljanje projektima",
+        "description": "Povezati aplikaciju s vanjskim sustavom za upravljanje projektima radi poboljšanja praćenja i koordinacije.",
+        "status": "completed"
+      },
+      {
+        "title": "Implementirati podršku za offline rad",
+        "description": "Omogućiti aplikaciji rad u offline režimu i sinkronizaciju podataka kada se uspostavi veza s internetom.",
+        "status": "pending"
+      },
+      {
+        "title": "Nadograditi postojeći sustav za autentifikaciju",
+        "description": "Unaprijediti postojeći sustav autentifikacije kako bi bio sigurniji i fleksibilniji.",
+        "status": "completed"
+      },
+      {
+        "title": "Razviti funkcionalnost za uvoz podataka iz Excel datoteka",
+        "description": "Dodati mogućnost uvoza podataka iz Excel datoteka u aplikaciju.",
+        "status": "pending"
+      },
+      {
+        "title": "Implementirati napredne postavke privatnosti za korisnike",
+        "description": "Omogućiti korisnicima napredne opcije za upravljanje privatnošću i sigurnošću svojih podataka.",
+        "status": "completed"
+      },
+      {
+        "title": "Dodati podršku za višestruke korisničke uloge",
+        "description": "Implementirati sustav koji omogućava različite uloge s različitim pravima unutar aplikacije.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti sustav za upravljanje zadacima u timu",
+        "description": "Stvoriti funkcionalnost za praćenje i upravljanje zadacima unutar tima.",
+        "status": "completed"
+      },
+      {
+        "title": "Integrirati funkcionalnost za slanje e-pošte",
+        "description": "Dodati mogućnost slanja e-pošte iz aplikacije za obavijesti i komunikaciju.",
+        "status": "pending"
+      },
+      {
+        "title": "Implementirati funkcionalnost za upravljanje popisima zadataka",
+        "description": "Razviti mogućnost za kreiranje, uređivanje i upravljanje različitim popisima zadataka.",
+        "status": "completed"
+      },
+      {
+        "title": "Dodati mogućnost preuzimanja sadržaja iz aplikacije",
+        "description": "Omogućiti korisnicima preuzimanje sadržaja iz aplikacije na lokalni uređaj.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti funkcionalnost za praćenje financijskih transakcija",
+        "description": "Stvoriti sustav za praćenje i upravljanje financijskim transakcijama unutar aplikacije.",
+        "status": "completed"
+      },
+      {
+        "title": "Implementirati mogućnost rezerviranja termina",
+        "description": "Dodati funkcionalnost za rezerviranje termina u aplikaciji, uključujući kalendarske prikaze.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti sučelje za unos i pregled korisničkih recenzija",
+        "description": "Stvoriti sučelje koje omogućava korisnicima unos i pregled recenzija i ocjena.",
+        "status": "completed"
+      },
+      {
+        "title": "Integrirati sustav za automatsko ažuriranje sadržaja",
+        "description": "Implementirati sustav za automatsko ažuriranje sadržaja aplikacije na temelju promjena u vanjskim izvorima.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti mogućnost grupiranja korisnika prema interesima",
+        "description": "Omogućiti korisnicima grupiranje prema interesima i preferencijama za bolju personalizaciju.",
+        "status": "completed"
+      },
+      {
+        "title": "Dodati opciju za prilagodbu tema sučelja",
+        "description": "Implementirati mogućnost za korisnike da prilagode temu sučelja prema svojim željama.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti funkcionalnost za upravljanje korisničkim pretplatama",
+        "description": "Stvoriti sustav za praćenje i upravljanje korisničkim pretplatama i članstvima.",
+        "status": "completed"
+      },
+      {
+        "title": "Implementirati opciju za povratne informacije od korisnika",
+        "description": "Omogućiti korisnicima davanje povratnih informacija i prijedloga za poboljšanja aplikacije.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti sustav za upravljanje zadacima s vremenskim ograničenjima",
+        "description": "Stvoriti funkcionalnost za upravljanje zadacima koji imaju vremenska ograničenja ili rokove.",
+        "status": "completed"
+      },
+      {
+        "title": "Dodati mogućnost sinkronizacije podataka između uređaja",
+        "description": "Omogućiti korisnicima sinkronizaciju podataka između različitih uređaja.",
+        "status": "pending"
+      },
+      {
+        "title": "Implementirati funkcionalnost za postavljanje i praćenje ciljeva",
+        "description": "Razviti sustav za postavljanje i praćenje ciljeva korisnika unutar aplikacije.",
+        "status": "completed"
+      },
+      {
+        "title": "Dodati podršku za različite formate datoteka",
+        "description": "Omogućiti aplikaciji rad s različitim formatima datoteka za uvoz i izvoz podataka.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti sustav za automatsko generiranje izvještaja",
+        "description": "Implementirati alat za automatsko generiranje izvještaja na temelju podataka u aplikaciji.",
+        "status": "completed"
+      },
+      {
+        "title": "Dodati mogućnost prilagodbe obavijesti korisnicima",
+        "description": "Omogućiti korisnicima prilagodbu vrsta i učestalosti obavijesti koje primaju iz aplikacije.",
+        "status": "pending"
+      },
+      {
+        "title": "Implementirati funkcionalnost za prijavu i upravljanje greškama",
+        "description": "Razviti sustav za prijavu i upravljanje greškama i bugovima u aplikaciji.",
+        "status": "completed"
+      },
+      {
+        "title": "Razviti mogućnost za suradnju u stvarnom vremenu",
+        "description": "Omogućiti korisnicima suradnju i razmjenu informacija u stvarnom vremenu unutar aplikacije.",
+        "status": "pending"
+      },
+      {
+        "title": "Implementirati funkcionalnost za odabir i primjenu predložaka",
+        "description": "Dodati opciju za odabir i primjenu predložaka u aplikaciji za različite svrhe.",
+        "status": "completed"
+      },
+      {
+        "title": "Dodati mogućnost izrade i upravljanja timskim projektima",
+        "description": "Razviti funkcionalnost za kreiranje i upravljanje projektima unutar tima.",
+        "status": "pending"
+      },
+      {
+        "title": "Izraditi funkcionalnost za praćenje radnih sati",
+        "description": "Omogućiti praćenje radnih sati i evidenciju rada korisnika u aplikaciji.",
+        "status": "completed"
+      },
+      {
+        "title": "Implementirati mogućnost rezervacije resursa",
+        "description": "Dodati funkcionalnost za rezervaciju resursa unutar aplikacije, uključujući prikaz dostupnosti.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti funkcionalnost za upravljanje zadacima s visokim prioritetom",
+        "description": "Stvoriti sustav za upravljanje zadacima koji su označeni kao visoki prioritet.",
+        "status": "completed"
+      },
+      {
+        "title": "Dodati podršku za više jezika u sučelju",
+        "description": "Implementirati podršku za više jezika u korisničkom sučelju aplikacije.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti mogućnost za kreiranje i slanje anketa",
+        "description": "Omogućiti korisnicima kreiranje i slanje anketa unutar aplikacije za prikupljanje povratnih informacija.",
+        "status": "completed"
+      },
+      {
+        "title": "Implementirati sustav za upravljanje resursima",
+        "description": "Razviti funkcionalnost za upravljanje resursima unutar aplikacije, uključujući dodjeljivanje i praćenje resursa.",
+        "status": "pending"
+      },
+      {
+        "title": "Dodati mogućnost izvoza izvještaja u PDF format",
+        "description": "Omogućiti korisnicima izvođenje izvještaja u PDF format za daljnje korištenje ili arhiviranje.",
+        "status": "completed"
+      },
+      {
+        "title": "Razviti funkcionalnost za planiranje i upravljanje sastancima",
+        "description": "Implementirati sustav za planiranje i upravljanje sastancima unutar aplikacije.",
+        "status": "pending"
+      },
+      {
+        "title": "Dodati mogućnost kreiranja i praćenja listi za kupovinu",
+        "description": "Omogućiti korisnicima kreiranje i praćenje listi za kupovinu unutar aplikacije.",
+        "status": "completed"
+      },
+      {
+        "title": "Implementirati sustav za integraciju s vanjskim alatima",
+        "description": "Razviti funkcionalnost za integraciju aplikacije s vanjskim alatima i uslugama.",
+        "status": "pending"
+      },
+      {
+        "title": "Razviti mogućnost praćenja statusa narudžbi",
+        "description": "Omogućiti praćenje statusa narudžbi u aplikaciji, uključujući povijest i promjene statusa.",
+        "status": "completed"
+      },
+      {
+        "title": "Dodati podršku za pravila o privatnosti i uvjete korištenja",
+        "description": "Implementirati opcije za korisnike da se upoznaju s pravilima o privatnosti i uvjetima korištenja aplikacije.",
+        "status": "pending"
+      }
+]
+
+  
