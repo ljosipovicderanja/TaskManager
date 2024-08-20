@@ -38,6 +38,11 @@ async def mark_notification_as_read(notification_id: str):
         raise HTTPException(status_code=404, detail="Notification not found or already marked as read")
     return await notifications_collection.find_one({"_id": ObjectId(notification_id)})
 
+@app.get("/notifications/unread/{user_id}", response_model=List[Notification])
+async def get_unread_notifications(user_id: str):
+    notifications = await notifications_collection.find({"user_id": user_id, "read": False}).to_list(100)
+    return notifications
+
 @app.get("/health")
 async def health_check():
     return {"status": "OK"}
