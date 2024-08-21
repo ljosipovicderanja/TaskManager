@@ -1,0 +1,18 @@
+{
+    "main_host": "127.0.0.1", 
+    "main_port": 8000, 
+    "task_worker_host":"127.0.0.1",
+    "task_worker_port": 8001,
+    "user_service_host": "127.0.0.1",
+    "user_service_port": 8002,
+    "notification_service_host": "127.0.0.1",
+    "notification_service_port": 8003,
+    "health_check_service_host": "127.0.0.1",
+    "health_check_service_port": 8004,
+    "task_backup_host": "127.0.0.1",
+    "task_backup_port": 8005,
+    "health_check_interval": 10,
+    "log_level": "INFO",
+    "report_timeout": 5.0,
+    "report_interval": 10.0
+  }

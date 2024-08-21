@@ -3,8 +3,16 @@ from pydantic import BaseModel
 from typing import List
 from bson import ObjectId
 from database import users_collection
+import json
+
+with open("config.json") as config_file:
+    config = json.load(config_file)
 
 app = FastAPI()
+
+#Configurable parameters from config.jso
+user_service_host = config["user_service_host"]
+user_service_port = config["user_service_port"]
 
 # Osnovni model za korisnika
 class User(BaseModel):
@@ -65,4 +73,4 @@ async def root():
 # Pokretanje aplikacije
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8002)
+    uvicorn.run(app, host=user_service_host, port=user_service_port)

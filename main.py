@@ -1,15 +1,36 @@
+import json
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import httpx
 import asyncio
 
+#Loading the configuration from config.json
+with open("config.json") as config_file:
+    config = json.load(config_file)
+
 app = FastAPI()
 
+#Configurable parameters from config.json
+main_host = config["main_host"]
+main_port = config["main_port"]
+task_worker_host = config["task_worker_host"]
+task_worker_port = config["task_worker_port"]
+user_service_host = config["user_service_host"]
+user_service_port = config["user_service_port"]
+notification_service_host = config["notification_service_host"]
+notification_service_port = config["notification_service_port"]
+health_check_service_host = config["health_check_service_host"]
+health_check_service_port = config["health_check_service_port"]
+task_backup_host = config["task_backup_host"]
+task_backup_port = config["task_backup_port"]
+
+
 services = {
-    "task_service": "http://localhost:8001",
+    "task_worker": "http://localhost:8001",
     "user_service": "http://localhost:8002",
     "notification_service": "http://localhost:8003",
-    "backup_service": "http://localhost:8004"
+    "health_check_service": "http://localhost:8004",
+    "task_backup": "http://localhost:8005"
 }
 
 class ServiceStatus(BaseModel):
@@ -47,7 +68,11 @@ async def get_users():
     async with httpx.AsyncClient() as client:
         response = await client.get(f"{services['user_service']}/users")
         return response.json()
+    
+@app.get("/health")
+async def health_check():
+    return {"status": "OK"}
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host=main_host, port=main_port)

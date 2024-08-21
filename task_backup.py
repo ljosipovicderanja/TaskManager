@@ -2,10 +2,18 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List
 from bson import ObjectId
-from database import backups_collection
-from motor.motor_asyncio import AsyncIOMotorClient
+from database import backupscollection
+from motor.motorasyncio import AsyncIOMotorClient
+import json
+
+with open("config.json") as configfile:
+    config = json.load(configfile)
 
 app = FastAPI()
+
+#Configurable parameters from config.jso
+task_backup_host = config["task_backup_host"]
+task_backup_port = config["task_backup_port"]
 
 class Task(BaseModel):
     title: str
@@ -42,6 +50,6 @@ async def get_backup_users():
 async def health_check():
     return {"status": "OK"}
 
-if __name__ == "__main__":
+if __name == "__main":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8004)
+    uvicorn.run(app, host="task_backup_host", port=task_backup_port)

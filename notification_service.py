@@ -4,8 +4,16 @@ from typing import List
 from bson import ObjectId
 from database import notifications_collection
 from motor.motor_asyncio import AsyncIOMotorClient
+import json
+
+with open("config.json") as config_file:
+    config = json.load(config_file)
 
 app = FastAPI()
+
+#Configurable parameters from config.jso
+notification_service_host = config["notification_service_host"]
+notification_service_port = config["notification_service_port"]
 
 class Notification(BaseModel):
     user_id: str
@@ -49,4 +57,4 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8003)
+    uvicorn.run(app, host=notification_service_host, port=notification_service_port)

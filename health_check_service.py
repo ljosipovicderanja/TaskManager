@@ -3,8 +3,12 @@ from typing import Dict
 import httpx
 import asyncio
 import logging
-from database import logs_collection
-from datetime import datetime
+from database import logs_collection  # Uvjerite se da je pravilno postavljen
+from datetime import datetime, timezone
+import json
+
+with open("config.json") as config_file:
+    config = json.load(config_file)
 
 # Postavljanje logiranja
 logging.basicConfig(level=logging.INFO)
@@ -12,11 +16,17 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
+# Konfiguracija
+health_check_service_host = config["health_check_service_host"]
+health_check_service_port = config["health_check_service_port"]
+
 # Definicija servisa koje ćemo pratiti
 services = {
-    "task_manager": "http://127.0.0.1:8001/health",
+    "main": "http://127.0.0.1:8000/health",
+    "task_worker": "http://127.0.0.1:8001/health",
     "user_service": "http://127.0.0.1:8002/health",
-    "notification_service": "http://127.0.0.1:8003/health"
+    "notification_service": "http://127.0.0.1:8003/health",
+    "task_backup": "http://127.0.0.1:8005/health"
 }
 
 # Globalna varijabla za spremanje statusa servisa
@@ -27,7 +37,7 @@ async def log_event(message: str, level: str = "INFO"):
     log_document = {
         "message": message,
         "level": level,
-        "timestamp": datetime.utcnow(),
+        "timestamp": datetime.now(timezone.utc),  # Ažurirano za pravilno korištenje timezone-aware datetimea
     }
     await logs_collection.insert_one(log_document)
 
@@ -74,4 +84,4 @@ async def startup_event():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8004)
+    uvicorn.run(app, host=health_check_service_host, port=health_check_service_port)

@@ -1,10 +1,19 @@
+import json
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 from bson import ObjectId
 from database import tasks_collection
 
+with open("config.json") as config_file:
+    config = json.load(config_file)
+
 app = FastAPI()
+
+#Configurable parameters from config.jso
+task_worker_host = config["task_worker_host"]
+task_worker_port = config["task_worker_port"]
+
 
 # Model za Task
 class Task(BaseModel):
@@ -72,4 +81,4 @@ async def health_check():
 # Pokretanje aplikacije
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    uvicorn.run(app, host=task_worker_host, port=task_worker_port)
