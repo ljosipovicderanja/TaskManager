@@ -3,14 +3,15 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import httpx
 import asyncio
+import subprocess
 
-#Loading the configuration from config.json
+# Loading the configuration from config.json
 with open("config.json") as config_file:
     config = json.load(config_file)
 
 app = FastAPI()
 
-#Configurable parameters from config.json
+# Configurable parameters from config.json
 main_host = config["main_host"]
 main_port = config["main_port"]
 task_worker_host = config["task_worker_host"]
@@ -24,13 +25,12 @@ health_check_service_port = config["health_check_service_port"]
 task_backup_host = config["task_backup_host"]
 task_backup_port = config["task_backup_port"]
 
-
 services = {
-    "task_worker": "http://localhost:8001",
-    "user_service": "http://localhost:8002",
-    "notification_service": "http://localhost:8003",
-    "health_check_service": "http://localhost:8004",
-    "task_backup": "http://localhost:8005"
+    "task_worker": f"http://{task_worker_host}:{task_worker_port}",
+    "user_service": f"http://{user_service_host}:{user_service_port}",
+    "notification_service": f"http://{notification_service_host}:{notification_service_port}",
+    "health_check_service": f"http://{health_check_service_host}:{health_check_service_port}",
+    "task_backup": f"http://{task_backup_host}:{task_backup_port}"
 }
 
 class ServiceStatus(BaseModel):
@@ -60,7 +60,7 @@ async def read_root():
 @app.get("/tasks")
 async def get_tasks():
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{services['task_service']}/tasks")
+        response = await client.get(f"{services['task_worker']}/tasks")
         return response.json()
 
 @app.get("/users")
@@ -68,11 +68,34 @@ async def get_users():
     async with httpx.AsyncClient() as client:
         response = await client.get(f"{services['user_service']}/users")
         return response.json()
-    
+
 @app.get("/health")
 async def health_check():
     return {"status": "OK"}
 
+# Funkcija za pokretanje svih servisa
+def start_services():
+    service_processes = []
+    service_commands = [
+        ["uvicorn", "task_worker:app", f"--host={task_worker_host}", f"--port={task_worker_port}"],
+        ["uvicorn", "user_service:app", f"--host={user_service_host}", f"--port={user_service_port}"],
+        ["uvicorn", "notification_service:app", f"--host={notification_service_host}", f"--port={notification_service_port}"],
+        ["uvicorn", "health_check_service:app", f"--host={health_check_service_host}", f"--port={health_check_service_port}"],
+        ["uvicorn", "task_backup:app", f"--host={task_backup_host}", f"--port={task_backup_port}"]
+    ]
+
+    for command in service_commands:
+        process = subprocess.Popen(command)
+        service_processes.append(process)
+    
+    return service_processes
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host=main_host, port=main_port)
+    # Pokretanje svih servisa prije pokretanja main aplikacije
+    services = start_services()
+    try:
+        uvicorn.run(app, host=main_host, port=main_port)
+    finally:
+        for process in services:
+            process.terminate()
