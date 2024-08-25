@@ -1,9 +1,10 @@
+import json
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List
 from bson import ObjectId
 from database import users_collection
-import json
+
 
 with open("config.json") as config_file:
     config = json.load(config_file)
@@ -19,14 +20,21 @@ class User(BaseModel):
     username: str
     email: str
 
-# Kreiranje novog korisnika
 @app.post("/users/", response_model=dict)
 async def create_user(user: User):
     existing_user = await users_collection.find_one({"email": user.email})
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already in use")
+    
     user_dict = user.dict()
+    print(f"Trying to insert user: {user_dict}")
+    
     result = await users_collection.insert_one(user_dict)
+    if result.inserted_id:
+        print(f"User successfully inserted with ID: {result.inserted_id}")
+    else:
+        print("User insert failed!")
+    
     return {"id": str(result.inserted_id)}
 
 # Dohvaćanje svih korisnika
@@ -65,9 +73,18 @@ async def delete_user(user_id: str):
 async def health_check():
     return {"status": "OK"}
 
-@app.get("/")
-async def root():
+@app.route("/")
+def root():
     return {"message": "Welcome to the User Service API!"}
+
+@app.on_event("startup")
+async def startup_db_client():
+    try:
+        # Test the connection
+        await users_collection.find_one()
+        print("Connected to MongoDB successfully!")
+    except Exception as e:
+        print(f"Failed to connect to MongoDB: {e}")
 
 
 # Pokretanje aplikacije

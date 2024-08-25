@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import httpx
 import asyncio
 import subprocess
+import os
 
 # Loading the configuration from config.json
 with open("config.json") as config_file:
@@ -57,45 +58,50 @@ async def check_services_health():
 async def read_root():
     return {"message": "Welcome to Task Management System"}
 
-@app.get("/tasks")
+@app.get("/tasks/")
 async def get_tasks():
-    async with httpx.AsyncClient() as client:
-        response = await client.get(f"{services['task_worker']}/tasks")
-        return response.json()
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{services['task_worker']}/tasks/")
+            response.raise_for_status()  # Ova linija će podići grešku ako status nije 2xx
+            return response.json()
+    except httpx.HTTPStatusError as exc:
+        print(f"Error response {exc.response.status_code} while requesting {exc.request.url!r}.")
+        raise HTTPException(status_code=exc.response.status_code, detail="Task worker service not available")
 
-@app.get("/users")
+    
+@app.get("/users/")
 async def get_users():
-    async with httpx.AsyncClient() as client:
-        response = await client.get(f"{services['user_service']}/users")
-        return response.json()
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{services['user_service']}/users/")
+            response.raise_for_status()  # Ova linija će podići grešku ako status nije 2xx
+            return response.json()
+    except httpx.HTTPStatusError as exc:
+        print(f"Error response {exc.response.status_code} while requesting {exc.request.url!r}.")
+        raise HTTPException(status_code=exc.response.status_code, detail="User service not available")
+
 
 @app.get("/health")
 async def health_check():
     return {"status": "OK"}
 
-# Funkcija za pokretanje svih servisa
+# Funkcija za pokretanje svih servisa u zasebnim terminalima
 def start_services():
-    service_processes = []
     service_commands = [
-        ["uvicorn", "task_worker:app", f"--host={task_worker_host}", f"--port={task_worker_port}"],
-        ["uvicorn", "user_service:app", f"--host={user_service_host}", f"--port={user_service_port}"],
-        ["uvicorn", "notification_service:app", f"--host={notification_service_host}", f"--port={notification_service_port}"],
-        ["uvicorn", "health_check_service:app", f"--host={health_check_service_host}", f"--port={health_check_service_port}"],
-        ["uvicorn", "task_backup:app", f"--host={task_backup_host}", f"--port={task_backup_port}"]
+        ["cmd.exe", "/c", "start", "cmd.exe", "/k", "uvicorn task_worker:app --host={} --port={}".format(task_worker_host, task_worker_port)],
+        ["cmd.exe", "/c", "start", "cmd.exe", "/k", "uvicorn user_service:app --host={} --port={}".format(user_service_host, user_service_port)],
+        ["cmd.exe", "/c", "start", "cmd.exe", "/k", "uvicorn notification_service:app --host={} --port={}".format(notification_service_host, notification_service_port)],
+        ["cmd.exe", "/c", "start", "cmd.exe", "/k", "uvicorn health_check_service:app --host={} --port={}".format(health_check_service_host, health_check_service_port)],
+        ["cmd.exe", "/c", "start", "cmd.exe", "/k", "uvicorn task_backup:app --host={} --port={}".format(task_backup_host, task_backup_port)]
     ]
 
     for command in service_commands:
-        process = subprocess.Popen(command)
-        service_processes.append(process)
-    
-    return service_processes
+        subprocess.Popen(command)
+
 
 if __name__ == "__main__":
     import uvicorn
     # Pokretanje svih servisa prije pokretanja main aplikacije
-    services = start_services()
-    try:
-        uvicorn.run(app, host=main_host, port=main_port)
-    finally:
-        for process in services:
-            process.terminate()
+    start_services()
+    uvicorn.run(app, host=main_host, port=main_port)

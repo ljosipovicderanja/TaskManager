@@ -20,7 +20,7 @@ class Task(BaseModel):
     title: str
     description: str
     status: str = "pending"
-    user_id: str  
+    user_id: Optional[str] = None  
 
 # Model za ažuriranje Task-a
 class UpdateTaskModel(BaseModel):
@@ -32,8 +32,20 @@ class UpdateTaskModel(BaseModel):
 # Kreiranje novog zadatka
 @app.post("/tasks/", response_model=dict)
 async def create_task(task: Task):
+    existing_task = await tasks_collection.find_one({"title": task.title})
+    if existing_task:
+        raise HTTPException(status_code=400, detail="Task with this title already exists")
+    
     task_dict = task.dict()
+    print(f"Trying to insert task: {task_dict}")
+
     result = await tasks_collection.insert_one(task_dict)
+
+    if result.inserted_id:
+        print(f"Task successfully inserted with ID: {result.inserted_id}")
+    else:
+        print("Task insert failed!")
+
     return {"id": str(result.inserted_id)}
 
 # Dohvaćanje svih zadataka
@@ -77,6 +89,10 @@ async def delete_task(task_id: str):
 @app.get("/health")
 async def health_check():
     return {"status": "OK"}
+
+@app.get("/")
+async def read_root():
+    return {"message": "Welcome to Task Management System"}
 
 # Pokretanje aplikacije
 if __name__ == "__main__":
