@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, BackgroundTasks
-from typing import Dict
+from typing import Dict, Any
 import httpx
 import asyncio
 import logging
@@ -37,7 +37,7 @@ async def log_event(message: str, level: str = "INFO"):
     log_document = {
         "message": message,
         "level": level,
-        "timestamp": datetime.now(timezone.utc),  # Ažurirano za pravilno korištenje timezone-aware datetimea
+        "timestamp": datetime.now(timezone.utc),  # Pravilno korištenje timezone-aware datetimea
     }
     await logs_collection.insert_one(log_document)
 
@@ -47,33 +47,35 @@ async def check_service(service_name: str, service_url: str):
         async with httpx.AsyncClient() as client:
             response = await client.get(service_url)
             response.raise_for_status()
-            service_status[service_name] = "UP"
+            service_status[service_name] = {"status": "UP"}
             await log_event(f"Service {service_name} is UP.")
-    except httpx.RequestError as exc:
-        service_status[service_name] = "DOWN"
+    except (httpx.RequestError, httpx.HTTPStatusError) as exc:
+        service_status[service_name] = {"status": "DOWN"}
         await log_event(f"Service {service_name} is DOWN. Error: {exc}", "ERROR")
-    except httpx.HTTPStatusError as exc:
-        service_status[service_name] = "DOWN"
-        await log_event(f"Service {service_name} returned status {exc.response.status_code}. Marking as DOWN.", "ERROR")
+        logger.error(f"Service {service_name} is DOWN. Error: {exc}")
+    except Exception as exc:
+        service_status[service_name] = {"status": "ERROR", "details": str(exc)}
+        await log_event(f"Service {service_name} encountered an unexpected error: {exc}", "ERROR")
+        logger.error(f"Unexpected error for service {service_name}: {exc}")
 
 # Funkcija koja se izvršava u pozadini
 async def periodic_health_check():
     while True:
         logger.info("Starting periodic health check...")
-        for service_name, service_url in services.items():
-            await check_service(service_name, service_url)
-        await asyncio.sleep(10)  # Čekanje između provjera (10 sekundi)
+        tasks = [check_service(service_name, service_url) for service_name, service_url in services.items()]
+        await asyncio.gather(*tasks)
         logger.info("Periodic health check completed.")
+        await asyncio.sleep(10)  # Čekanje između provjera (10 sekundi)
 
 # Ruta za ručnu provjeru statusa servisa
 @app.get("/health/{service_name}")
-async def health_check(service_name: str) -> Dict[str, str]:
+async def health_check(service_name: str) -> Dict[str, Any]:
     if service_name not in services:
         raise HTTPException(status_code=404, detail="Service not found")
-    return {"service": service_name, "status": service_status.get(service_name, "UNKNOWN")}
+    return {"service": service_name, "status": service_status.get(service_name, {"status": "UNKNOWN"})}
 
 # Ruta za provjeru statusa svih servisa
-@app.get("/health/")
+@app.get("/health")
 async def health_check_all() -> Dict[str, Dict[str, str]]:
     return service_status
 

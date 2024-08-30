@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 from bson import ObjectId
-from database import tasks_collection
+from database import tasks_collection, users_collection
 
 with open("config.json") as config_file:
     config = json.load(config_file)
@@ -29,23 +29,21 @@ class UpdateTaskModel(BaseModel):
     status: Optional[str]
     user_id: Optional[str]  
 
-# Kreiranje novog zadatka
 @app.post("/tasks/", response_model=dict)
 async def create_task(task: Task):
-    existing_task = await tasks_collection.find_one({"title": task.title})
-    if existing_task:
-        raise HTTPException(status_code=400, detail="Task with this title already exists")
+    # Provjera formata user_id
+    if not ObjectId.is_valid(task.user_id):
+        raise HTTPException(status_code=400, detail="Invalid user_id format")
     
+    # Provjera postojanja korisnika s danim user_id
+    user = await users_collection.find_one({"_id": ObjectId(task.user_id)})
+    if user is None:
+        raise HTTPException(status_code=404, detail="User with given ID does not exist")
+
+    # Ako je user_id validan, kreiraj zadatak
     task_dict = task.dict()
-    print(f"Trying to insert task: {task_dict}")
-
     result = await tasks_collection.insert_one(task_dict)
-
-    if result.inserted_id:
-        print(f"Task successfully inserted with ID: {result.inserted_id}")
-    else:
-        print("Task insert failed!")
-
+    
     return {"id": str(result.inserted_id)}
 
 # Dohvaćanje svih zadataka

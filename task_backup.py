@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from typing import List
+from pydantic import BaseModel, EmailStr
+from typing import List, Optional
 from bson import ObjectId
 from database import backups_collection, tasks_collection, users_collection, notifications_collection
 import json
@@ -22,11 +22,12 @@ class Task(BaseModel):
     title: str
     description: str
     status: str = "pending"
+    user_id: Optional[str] = None 
 
 # Model za korisnike
 class User(BaseModel):
     username: str
-    email: str
+    email: EmailStr
 
 # Model za notifikacije
 class Notification(BaseModel):

@@ -1,10 +1,11 @@
 import json
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 import httpx
 import asyncio
 import subprocess
 import os
+from typing import Optional
 
 # Loading the configuration from config.json
 with open("config.json") as config_file:
@@ -58,18 +59,21 @@ async def check_services_health():
 async def read_root():
     return {"message": "Welcome to Task Management System"}
 
-@app.get("/tasks/")
-async def get_tasks():
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(f"{services['task_worker']}/tasks/")
-            response.raise_for_status()  # Ova linija će podići grešku ako status nije 2xx
-            return response.json()
-    except httpx.HTTPStatusError as exc:
-        print(f"Error response {exc.response.status_code} while requesting {exc.request.url!r}.")
-        raise HTTPException(status_code=exc.response.status_code, detail="Task worker service not available")
+### USER SERVICE ROUTES ###
 
-    
+class User(BaseModel):
+    username: str
+    email: EmailStr  # Koristi EmailStr za validaciju emaila
+
+@app.post("/users/", response_model=dict)
+async def create_user(user: User):
+    async with httpx.AsyncClient() as client:
+        response = await client.post(f"{services['user_service']}/users/", json=user.dict())
+        if response.status_code == 201:
+            return response.json()
+        else:
+            raise HTTPException(status_code=response.status_code, detail=response.text)
+
 @app.get("/users/")
 async def get_users():
     try:
@@ -81,6 +85,90 @@ async def get_users():
         print(f"Error response {exc.response.status_code} while requesting {exc.request.url!r}.")
         raise HTTPException(status_code=exc.response.status_code, detail="User service not available")
 
+@app.get("/users/{user_id}", response_model=User)
+async def get_user(user_id: str):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{services['user_service']}/users/{user_id}")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise HTTPException(status_code=response.status_code, detail=response.text)
+
+@app.put("/users/{user_id}", response_model=User)
+async def update_user(user_id: str, user: User):
+    async with httpx.AsyncClient() as client:
+        response = await client.put(f"{services['user_service']}/users/{user_id}", json=user.dict())
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise HTTPException(status_code=response.status_code, detail=response.text)
+
+@app.delete("/users/{user_id}", response_model=dict)
+async def delete_user(user_id: str):
+    async with httpx.AsyncClient() as client:
+        response = await client.delete(f"{services['user_service']}/users/{user_id}")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise HTTPException(status_code=response.status_code, detail=response.text)
+
+### TASK WORKER ROUTES ###
+
+
+class Task(BaseModel):
+    title: str
+    description: str
+    status: str
+    user_id: Optional[str] = None
+
+@app.post("/tasks/", response_model=dict)
+async def create_task(task: Task):
+    async with httpx.AsyncClient() as client:
+        response = await client.post(f"{services['task_worker']}/tasks/", json=task.dict())
+        if response.status_code == 201:
+            return response.json()
+        else:
+            raise HTTPException(status_code=response.status_code, detail=response.text)
+
+@app.get("/tasks/")
+async def get_tasks():
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(f"{services['task_worker']}/tasks/")
+            response.raise_for_status()  # Ova linija će podići grešku ako status nije 2xx
+            return response.json()
+    except httpx.HTTPStatusError as exc:
+        print(f"Error response {exc.response.status_code} while requesting {exc.request.url!r}.")
+        raise HTTPException(status_code=exc.response.status_code, detail="Task worker service not available")
+
+@app.get("/tasks/{task_id}", response_model=Task)
+async def get_task(task_id: str):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{services['task_worker']}/tasks/{task_id}")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise HTTPException(status_code=response.status_code, detail=response.text)
+
+@app.put("/tasks/{task_id}", response_model=Task)
+async def update_task(task_id: str, task: Task):
+    async with httpx.AsyncClient() as client:
+        response = await client.put(f"{services['task_worker']}/tasks/{task_id}", json=task.dict())
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise HTTPException(status_code=response.status_code, detail=response.text)
+
+@app.delete("/tasks/{task_id}", response_model=dict)
+async def delete_task(task_id: str):
+    async with httpx.AsyncClient() as client:
+        response = await client.delete(f"{services['task_worker']}/tasks/{task_id}")
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise HTTPException(status_code=response.status_code, detail=response.text)
+
+### HEALTH CHECK ROUTE ###
 
 @app.get("/health")
 async def health_check():

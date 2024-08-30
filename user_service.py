@@ -1,6 +1,6 @@
 import json
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import List
 from bson import ObjectId
 from database import users_collection
@@ -18,7 +18,7 @@ user_service_port = config["user_service_port"]
 # Osnovni model za korisnika
 class User(BaseModel):
     username: str
-    email: str
+    email: EmailStr
 
 @app.post("/users/", response_model=dict)
 async def create_user(user: User):
