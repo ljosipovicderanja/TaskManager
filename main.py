@@ -167,6 +167,29 @@ async def delete_task(task_id: str):
             return response.json()
         else:
             raise HTTPException(status_code=response.status_code, detail=response.text)
+        
+
+### NOTIFICATION SERVICE ROUTES ###
+class Notification(BaseModel):
+    user_id: str
+    message: str
+    read: bool
+
+@app.get("/notifications/")
+async def get_notifications():
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:  # Postavite timeout na 10 sekundi ili više
+            response = await client.get(f"{services['notification_service']}/notifications/")
+            response.raise_for_status()  # Ova linija će podići grešku ako status nije 2xx
+            return response.json()
+    except httpx.HTTPStatusError as exc:
+        print(f"Error response {exc.response.status_code} while requesting {exc.request.url!r}.")
+        raise HTTPException(status_code=exc.response.status_code, detail="Notification service not available")
+    except httpx.RequestError as exc:
+        print(f"An error occurred: {exc}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+    
+
 
 ### HEALTH CHECK ROUTE ###
 
