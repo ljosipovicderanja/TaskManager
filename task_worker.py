@@ -1,5 +1,6 @@
 import json
 from fastapi import FastAPI, HTTPException
+import httpx
 from pydantic import BaseModel
 from typing import List, Optional
 from bson import ObjectId
@@ -43,8 +44,24 @@ async def create_task(task: Task):
     # Ako je user_id validan, kreiraj zadatak
     task_dict = task.dict()
     result = await tasks_collection.insert_one(task_dict)
-    
+
+    # Slanje obavijesti korisniku putem notification_service
+    notification_data = {
+        "user_id": task.user_id,
+        "message": f"Novi zadatak kreiran: {task.title}",
+        "read": False
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            notification_response = await client.post(f"http://127.0.0.1:8003/notifications/", json=notification_data)
+            notification_response.raise_for_status()  # Provjeri je li obavijest uspješno poslana
+    except httpx.HTTPStatusError as e:
+        print(f"Failed to send notification: {e}")
+        # Ovdje možete odlučiti kako dalje, npr. obrisati kreirani zadatak ili samo nastaviti
+
     return {"id": str(result.inserted_id)}
+
 
 # Dohvaćanje svih zadataka
 @app.get("/tasks/", response_model=List[Task])
